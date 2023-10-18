@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
+import { StyleSheet,  StatusBar, View } from 'react-native';
+import Landing from './components/Landing';
+import { Platform } from 'react-native';
+import { lightColors, createTheme, ThemeProvider } from '@rneui/themed';
+import { createStackNavigator } from '@react-navigation/stack';
+import Home from './components/Home';
+import { NavigationContainer } from '@react-navigation/native';
+const theme = createTheme({
+  lightColors: {
+    ...Platform.select({
+      default: lightColors.platform.android,
+      ios: lightColors.platform.ios,
+    }),
+  },
+});
+
+const Stack = createStackNavigator();
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    
+    <ThemeProvider>
+      
+      <View style={styles.container}>
+        
+      </View>
+      <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Landing" component={Landing}/>
+        <Stack.Screen name="Home" component={Home}/>
+      </Stack.Navigator>
+      </NavigationContainer>
+      
+    
+    </ThemeProvider>
+      
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    paddingTop:StatusBar.currentHeight || 0,    
   },
 });
