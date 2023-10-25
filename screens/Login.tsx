@@ -1,15 +1,19 @@
 import { Button, Icon, Input } from '@rneui/themed';
+import { InputProps } from '@rneui/themed';
 import React, { useState, useRef } from 'react';
 import { ReactNode } from 'react';
 import { Alert } from 'react-native';
 import axiosInstance from '../axios/axiosInstance';
 
+import { saveToken } from '../context/slice/loginSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getIsLoggedIn } from '../context/slice/loginSlice';
 
-
-export default function Login({navigation}):ReactNode{
+export default function Login():ReactNode{
+    const dispatch = useDispatch();
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    const emailRef = useRef(),
-        passwordRef = useRef();
+    const emailRef = useRef<InputProps>(),
+        passwordRef = useRef<InputProps>();
     const [emailError,setEmailError] = useState("");
     const [passwordError,setPasswordError] = useState("");
     const [email,setEmail] = useState(""),
@@ -21,16 +25,21 @@ export default function Login({navigation}):ReactNode{
         const passwordResult:boolean = validatePassword();
         if(emailResult && passwordResult){
             setIsLoading(!isLoading);
-            const formData = {
+            const payload = {
                 email:email,
                 password:password
             }
             try{
-                let res = await axiosInstance.post("auth/authenticate",formData);
-                console.log(res);
+                console.log("here")
+                // let temp = useSelector(state=>state.login.isLoggedIn)
+                // console.log("here"+temp)
+                let res = await axiosInstance.post("auth/authenticate",payload);
+                // console.log(res);
                 Alert.alert(`Login Success check console for toekn`);
                 console.log(`token: ${res.data.token}`);
-                navigation.navigate('Home',{token:res.data.token})
+                
+                dispatch(saveToken({token:res.data.token,email:email,isLoggedIn:true}))
+                
             }catch(e:any){
                 if(e.response){
                     console.log(e.response);
@@ -48,7 +57,7 @@ export default function Login({navigation}):ReactNode{
     const validateEmail = ():boolean=>{
         if (!emailPattern.test(email)) {
             setEmailError("Invalid Email");
-            emailRef.current.shake();
+            if(emailRef.current!=null && emailRef.current.shake)emailRef.current.shake();
             return false;
         } else {
             setEmailError("");
@@ -58,7 +67,7 @@ export default function Login({navigation}):ReactNode{
     const validatePassword = ():boolean=>{
         if(password.length<=0){
             setPasswordError("Empty Password");
-            passwordRef.current.shake();
+            if(passwordRef.current!=null  && passwordRef.current.shake)passwordRef.current.shake();
             console.log("here"+passwordError.length);
             return false;
         }else{

@@ -1,15 +1,17 @@
-import { Button, Icon, Input, Tooltip } from '@rneui/themed';
+import { Button, Icon, Input, InputProps, Tooltip } from '@rneui/themed';
 import {View,Text, ScrollView} from 'react-native';
 import { useState, useRef } from 'react';
 import axiosInstance from '../axios/axiosInstance';
 import { Alert } from 'react-native';
-export default function Register({navigation}){
+import { useDispatch } from 'react-redux';
+
+export default function Register(){
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
-    const emailRef = useRef(null),
-        passwordRef = useRef(null),
-        fnRef = useRef(null),
-        lnRef = useRef(null),
-        tooltipRef = useRef(null);
+    const emailRef = useRef<InputProps>(null),
+        passwordRef = useRef<InputProps>(null),
+        fnRef = useRef<InputProps>(null),
+        lnRef = useRef<InputProps>(null),
+        tooltipRef = useRef<InputProps>(null);
     const [emailError,setEmailError] = useState(""),
      [passwordError,setPasswordError] = useState(""),
      [fnError,setFnError] = useState(""),
@@ -46,7 +48,7 @@ export default function Register({navigation}){
                 console.log(res);
                 Alert.alert(`registration Success`);
                 console.log(res.data.token);
-                navigation.navigate('Home',{token:res.data.token})
+                
             }catch(e:any){
                 if(e.response){
                     if(e.response.data.includes("user_details_email_key")){
@@ -67,7 +69,7 @@ export default function Register({navigation}){
     const validateFn = ():boolean=>{
         if(firstName.length<=0){
             setFnError("Empty Name");
-            fnRef.current.shake();            
+            if(fnRef.current && fnRef.current.shake)fnRef.current.shake();            
             return false;
         }else{
             setFnError("");
@@ -77,7 +79,7 @@ export default function Register({navigation}){
     const validateLn = ():boolean=>{
         if(firstName.length<=0){
             setLnError("Empty Name");
-            lnRef.current.shake();            
+            if(lnRef.current && lnRef.current.shake)lnRef.current.shake();            
             return false;
         }else{
             setLnError("");
@@ -87,7 +89,7 @@ export default function Register({navigation}){
     const validateEmail = ():boolean=>{
         if (!emailPattern.test(email)) {
             setEmailError("Invalid Email");
-            emailRef.current.shake();
+            if(emailRef.current && emailRef.current.shake)emailRef.current.shake();
             return false;
         } else {
             setEmailError("");
@@ -95,23 +97,23 @@ export default function Register({navigation}){
         }
     }
     const validatePassword = ():boolean=>{
-        if(password.length < 8 ||
-            !/[A-Z]/.test(password) ||
-            !/[!@#$%^&*]/.test(password) ||
-            !/\d/.test(password)){
-            setPasswordError("Invalid Password");
-            passwordRef.current.shake();
-            console.log("here"+passwordError.length);
-            return false;
-        }else{
-            setPasswordError("")
-            return true;
-        }
+        if(password.length>0 && (password.length < 8 ||
+          !/[A-Z]/.test(password) ||
+          !/[!@#$%^&*]/.test(password) ||
+          !/\d/.test(password))){
+          setPasswordError("Invalid Password");
+          if(passwordRef.current!=null && passwordRef.current.shake)passwordRef.current.shake();
+          console.log("here"+passwordError.length);
+          return false;
+      }else{
+          setPasswordError("")
+          return true;
+      }
     }
     const validateEqualPassword = ():boolean=>{
         if(passwordRetype!==password){
             setPasswordRetypeError("Password's does not match");
-            passwordRef.current.shake();
+            if(passwordRef.current && passwordRef.current.shake)passwordRef.current.shake();
             return false;
         }else{
             setPasswordRetypeError("")
