@@ -1,21 +1,35 @@
 import { Card, Text } from '@rneui/themed';
+import { useState } from 'react';
 import {View,FlatList, StyleSheet} from 'react-native';
-
+import axiosInstance from '../axios/axiosInstance';
+import { useSelector } from 'react-redux';
+import { getToken } from '../context/slice/loginSlice';
+import { getCountryCode } from '../context/slice/locationSlice';
 interface Props {
     navigation: any,
     route: any
 }
-export default function Trending(Props: { route: { params: { list: any; }; }; }){
-    let {list} = Props.route.params
+export default function Trending(Props: { route: { params: { tempList: any,listName:String,countryCode:String,route:any }; }; }){
+    let {tempList,listName,} = Props.route.params
+    const token = useSelector(getToken)
+    const countryCode = useSelector(getCountryCode)
+    const [page,setPage] = useState(1)
+    const [list,setList] = useState(tempList)
     const renderMovieItem = (item:any) => (
         <Card containerStyle={styles.movieCard}>
-            <Card.Image source={{ uri: `https://image.tmdb.org/t/p/w500/${item.backdrop_path}` }} />
-            <Text style={styles.movieTitle}>{item.original_title}</Text>
+            <Card.Image source={{ uri: `https://image.tmdb.org/t/p/w500/${item.poster_path}` }} />
+            <Text style={styles.movieTitle}>{item.title}</Text>
             <Text style={styles.movieDetails}>{`${item.release_date} | Rating: ${item.vote_average}`}</Text>
-        
         </Card>
       );
     const keyExtractor = (item:any) => item.id;
+    const fetchNextPage = async ()=>{
+      
+      const {data} = await axiosInstance.get(`tmdb/${listName}?region=${countryCode}`,{params:{region:countryCode,page:(page+1)},headers:{Authorization:`Bearer ${token}`}})
+      // console.log(data)
+      setList([...list,...data.results])
+      setPage((page+1))
+    }
     return (
         <View style={styles.container}>
             <FlatList
@@ -23,6 +37,8 @@ export default function Trending(Props: { route: { params: { list: any; }; }; })
                 renderItem={({item})=>renderMovieItem(item)}
                 keyExtractor={keyExtractor}
                 numColumns={2}
+                onEndReachedThreshold={0.8}
+                onEndReached={fetchNextPage}
                 columnWrapperStyle={styles.movieGrid}
             />
         </View>

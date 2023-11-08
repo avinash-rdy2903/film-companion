@@ -13,7 +13,8 @@ export default function Overview(){
             
         <Stack.Navigator initialRouteName="main"> 
             <Stack.Screen name="main" component={HomeOverview} options={{headerShown:false}}/>
-            <Stack.Screen name="moreTrending" component={Trending} options={{title:"Trending"}}/>
+            <Stack.Screen name="moreOverview" component={Trending} options={{headerShown:false}}/>
+            
         </Stack.Navigator>
         
         

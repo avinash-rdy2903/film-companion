@@ -17,7 +17,6 @@ export const loginSlice = createSlice({
     initialState,
     reducers:{
         saveToken: (state:loginState,action)=>{
-            console.log(action)
             const userAuth:loginState = {
                 isLoggedIn:action.payload.isLoggedIn,
                 token:action.payload.token,

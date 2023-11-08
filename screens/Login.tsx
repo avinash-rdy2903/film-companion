@@ -34,10 +34,7 @@ export default function Login():ReactNode{
                 // let temp = useSelector(state=>state.login.isLoggedIn)
                 // console.log("here"+temp)
                 let res = await axiosInstance.post("auth/authenticate",payload);
-                // console.log(res);
-                Alert.alert(`Login Success check console for toekn`);
-                console.log(`token: ${res.data.token}`);
-                
+                // console.log(res);                
                 dispatch(saveToken({token:res.data.token,email:email,isLoggedIn:true}))
                 
             }catch(e:any){
