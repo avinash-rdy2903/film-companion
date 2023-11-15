@@ -16,18 +16,17 @@ function TabViewWraper({navigation}:any):ReactNode{
     return (
         <><View style={styles.tabContainer}>
             <Tab value={index} onChange={(e) => setIndex(e)}>
-                <Tab.Item title="Login" />
-                <Tab.Item title="Register" />
+                <Tab.Item title="Login" titleStyle={styles.tabItem} />
+                <Tab.Item title="Register" titleStyle={styles.tabItem}/>
             </Tab>
         </View><TabView value={index} onChange={setIndex} animationType="spring" tabItemContainerStyle={styles.tabViewContainer}>
                 <TabView.Item style={styles.tabViewContainer}>
-                    <Login />
+                    <Login navigation = {navigation}/>
                 </TabView.Item>
                 <TabView.Item style={styles.tabViewContainer}>
                     <Register />
                 </TabView.Item>
         </TabView>
-        <Text onPress={()=>navigation.navigate('otp')}>Reset Password?</Text>
         </>
     );
 }
@@ -49,6 +48,9 @@ const styles = StyleSheet.create({
         flex:0.2,
         justifyContent:"center",
         alignItems:"center",
+    },
+    tabItem:{
+        color: '#397af8'
     },
     tabViewContainer:{
         flex:0.8,

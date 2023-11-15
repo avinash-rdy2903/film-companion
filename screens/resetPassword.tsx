@@ -1,4 +1,4 @@
-import { Alert, View } from "react-native";
+import { Alert, View, StyleSheet } from "react-native";
 import {Text, Button, Input, InputProps, Icon, Tooltip} from '@rneui/themed'
 import { useSelector, useDispatch } from "react-redux";
 import { getToken } from "../context/slice/loginSlice";
@@ -95,9 +95,10 @@ export default function ResetPassword(Props:{ navigation: { navigate: any }}){
         }
     }
     return (
-        <View>
-
-<Input ref={otpRef}
+        <View style={styles.container}>
+        
+        <Text style={styles.text}>Enter OTP and New Password</Text>
+        <Input ref={otpRef}
           label="OTP"
           placeholder="one-time-password"
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
@@ -188,3 +189,13 @@ export default function ResetPassword(Props:{ navigation: { navigate: any }}){
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+  container:{
+      margin:15,
+      alignItems:"center"
+  },
+  text:{
+      fontSize:30
+  }
+})

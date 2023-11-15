@@ -1,4 +1,4 @@
-import { Button, Icon, Input } from '@rneui/themed';
+import { Button, Icon, Input, Text } from '@rneui/themed';
 import { InputProps } from '@rneui/themed';
 import React, { useState, useRef } from 'react';
 import { ReactNode } from 'react';
@@ -9,7 +9,8 @@ import { saveToken } from '../context/slice/loginSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { getIsLoggedIn } from '../context/slice/loginSlice';
 
-export default function Login():ReactNode{
+export default function Login(Props: { navigation: any; }):ReactNode{
+    const {navigation} = Props
     const dispatch = useDispatch();
     const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
     const emailRef = useRef<InputProps>(),
@@ -100,6 +101,7 @@ export default function Login():ReactNode{
           errorMessage={passwordError}
           onBlur={validatePassword}
         />
+        <Text style={{borderBottomWidth:1}}onPress={()=>navigation.navigate('otp')}>Reset Password?</Text>
         <Button
               title="LOG IN"
               buttonStyle={{

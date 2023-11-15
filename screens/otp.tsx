@@ -1,4 +1,4 @@
-import { Alert, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import {Text, Button, Input} from "@rneui/themed";
 import { InputProps } from "@rneui/themed";
 import { useDispatch } from "react-redux";
@@ -51,8 +51,8 @@ export default function Otp(Props: { navigation: { navigate: any; }; }):ReactNod
     }
 
     return (
-    <View>
-        <Text>Enter your email for OTP</Text>
+    <View style={styles.container}>
+        <Text style={styles.text}>Enter your email for OTP</Text>
         <Input ref={emailRef} label="Email"
           placeholder="Email"
           leftIcon={{ type: 'font-awesome', name: 'user' }}
@@ -62,7 +62,7 @@ export default function Otp(Props: { navigation: { navigate: any; }; }):ReactNod
           errorMessage={emailError}
         ></Input>
         <Button
-              title="LOG IN"
+              title="Get OTP"
               buttonStyle={{
                 backgroundColor: 'black',
                 borderWidth: 2,
@@ -81,3 +81,13 @@ export default function Otp(Props: { navigation: { navigate: any; }; }):ReactNod
     </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container:{
+        margin:15,
+        alignItems:"center"
+    },
+    text:{
+        fontSize:30
+    }
+})

@@ -1,5 +1,5 @@
-import {ScrollView,View} from 'react-native';
-import { Text, Card, Image, Button } from '@rneui/themed';
+import {ScrollView,View, StyleSheet, Alert} from 'react-native';
+import { Text, Card, Image, Button, Icon } from '@rneui/themed';
 import {useState,useEffect} from 'react';
 import axiosInstance from '../axios/axiosInstance';
 import { useSelector } from 'react-redux';
@@ -13,9 +13,12 @@ export default function MovieDetails(Props: { route: { params: { id: any,route:a
     const token = useSelector(getToken)
     const [movieData,setMovieData] = useState<any>({})
     const [loading,setLoading] = useState(true)
+    const [watchLoading,setWatchLoading] = useState(false)
+    const [favoriteLoading,setFavoriteLoading] = useState(false)
+
     const fetchMovieData = async ()=>{
         try{
-            let {data} = await axiosInstance.get("tmdb/movie",{params:{id:id},headers:{Authorization:`Bearer ${token}`}})
+            let {data} = await axiosInstance.get(`tmdb/movie/${id}`,{headers:{Authorization:`Bearer ${token}`}})
             setMovieData(data)
             
             setLoading(false)
@@ -24,8 +27,45 @@ export default function MovieDetails(Props: { route: { params: { id: any,route:a
         }
     }
     useEffect(()=>{
-        fetchMovieData().then(()=>{})
+        fetchMovieData().then(()=>{
+            
+        })
     },[])
+
+    const addFavorite = async ()=>{
+        setFavoriteLoading(true)
+        try{ 
+            const payload = {
+                id:movieData.id,
+                title:movieData.title,
+                posterPath:movieData.poster_path,
+                releaseDate:movieData.release_date,
+                voteAverage:movieData.vote_average
+            }   
+            console.log(payload)        
+            let {data} = await axiosInstance.put("tmdb/movie/favorite",payload,{headers:{Authorization:`Bearer ${token}`}})
+        }catch(e:any){
+            Alert.alert("Error",e.message)
+        }
+        setFavoriteLoading(false)
+    }
+
+    const addWatchList =async () => {
+        setWatchLoading(true)
+        try{
+            const payload = {
+                id:movieData.id,
+                posterPath:movieData.poster_path,
+                releaseDate:movieData.release_date,
+                voteAverage:movieData.vote_average
+            } 
+            let {data} = await axiosInstance.put("tmdb/movie/watchlist",payload,{headers:{Authorization:`Bearer ${token}`}})
+
+        }catch(e:any){
+            Alert.alert("Error",e.message)
+        }
+        setWatchLoading(false)
+    }
     return (
         <ScrollView>
             {loading?<Button loading={loading}/>:<Card containerStyle={{ padding: 0 }}>
@@ -55,9 +95,28 @@ export default function MovieDetails(Props: { route: { params: { id: any,route:a
                 <Text style={{ marginBottom: 10 }}>
                     Status: {movieData.status}
                 </Text>
-                <Button title="Watch Trailer" onPress={() => {}} />
+                <View style={styles.rowView}>
+                    <Button loading={favoriteLoading} buttonStyle={{
+                            backgroundColor: 'rgba(252, 40, 93, 1)',
+                            borderRadius: 5,
+                        }} icon={<Icon name="favorite" color="white" style={{marginRight:5}} />} color={""} title="Favorite" onPress={() => addFavorite()} />
+                    <Button loading={watchLoading} buttonStyle={{
+                            backgroundColor: 'rgba(143, 143, 141, 1)',
+                            borderRadius: 5,
+                        }} icon={<Icon name="schedule" color="white" style={{marginRight:5}} />} radius={"sm"} title="Watch List" onPress={() => addWatchList()} />
                 </View>
+                    
+
+                </View>
+                
             </Card>}
         </ScrollView>
     )
 }
+
+const styles = StyleSheet.create({
+    rowView:{
+        flexDirection:"row",
+        justifyContent:"space-evenly"
+    }
+})

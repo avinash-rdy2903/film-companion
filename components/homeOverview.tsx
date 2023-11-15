@@ -1,5 +1,5 @@
-import { View, StyleSheet, ScrollView} from "react-native";
-import { Text, Card, Button, Overlay } from "@rneui/themed";
+import { View, StyleSheet, ScrollView, TouchableOpacity} from "react-native";
+import { Text, Card, Button, Overlay, Header } from "@rneui/themed";
 import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { getToken } from "../context/slice/loginSlice";
@@ -41,9 +41,12 @@ export default function HomeOverview(Props: { navigation: { navigate: any; }; })
         
         let temp = list.slice(0,7).map((movie:any, index) => (
                 <Card key={index} containerStyle={styles.cardContainer}>
-                    <Card.Image style={styles.cardImage} source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}` }} />
-                    <Text style={styles.movieTitle}>{movie.title}</Text>
-                    <Text style={styles.movieDetails}>{`${movie.release_date} | Rating: ${movie.vote_average}`}</Text>
+                    <TouchableOpacity style={{flex:1}} onPress={()=>navigate("movieDetails",{id:movie.id})}>
+
+                        <Card.Image style={styles.cardImage} source={{ uri: `https://image.tmdb.org/t/p/w500/${movie.poster_path}` }} />
+                        <Text style={styles.movieTitle}>{movie.title}</Text>
+                        <Text style={styles.movieDetails}>{`${movie.release_date} | Rating: ${movie.vote_average}`}</Text>
+                    </TouchableOpacity>
                 </Card>
               ));
         return temp.concat([

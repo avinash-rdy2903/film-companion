@@ -48,7 +48,8 @@ export default function Search(Props: any ){
     const keyExtractor = (item:any) => item.id;
     const fetchNextPage = async ()=>{  
         setLoading(true)    
-      const {data} = await axiosInstance.get(`tmdb/search`,{params:{query:text,page:(page+1)},headers:{Authorization:`Bearer ${token}`}})
+        console.log({query:text,page:(page+1),language:language,adult:isRated,year:releaseYear})
+      const {data} = await axiosInstance.get(`tmdb/movie/search`,{params:{query:text,page:(page+1),language:language,adult:isRated,year:releaseYear},headers:{Authorization:`Bearer ${token}`}})
       console.log(data)
       
       setList([...list,...data.results].sort((a,b)=>{

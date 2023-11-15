@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { deleteToken } from "../context/slice/loginSlice";
 import Overview from "./overview";
 import SearchWraper from "./searchWraper";
-import Library from "./library";
+import LibraryWraper from "./LibraryWrapper";
 import UserSettings from "./userSettings";
 import { NavigationContainer } from "@react-navigation/native";
 
@@ -29,7 +29,7 @@ export default function Home():React.ReactNode{
             <Tab.Navigator>
                 <Tab.Screen name='Home' component={Overview} options={{headerShown:false,tabBarIcon:({color,size})=>(<Icon name="home" color={color} size={size}/>)}}/>
                 <Tab.Screen name="Search" component={SearchWraper} options={{headerShown:false,tabBarIcon:({color,size})=>(<Icon name="search" color={color} size={size}/>)}}/>
-                <Tab.Screen name="Library" component={Library} options={{headerShown:false,tabBarIcon:({color,size})=>(<Icon name="movie" color={color} size={size}/>)}}/>
+                <Tab.Screen name="Library" component={LibraryWraper} options={{headerShown:false,tabBarIcon:({color,size})=>(<Icon name="movie" color={color} size={size}/>)}}/>
                 <Tab.Screen name="Settings" component={UserSettings} options={{headerShown:false,tabBarIcon:({color,size})=>(<Icon name="settings" color={color} size={size}/>)}}/>
             </Tab.Navigator>
         </NavigationContainer>
