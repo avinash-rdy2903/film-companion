@@ -57,7 +57,8 @@ export default function MovieDetails(Props: { route: { params: { id: any,route:a
                 id:movieData.id,
                 posterPath:movieData.poster_path,
                 releaseDate:movieData.release_date,
-                voteAverage:movieData.vote_average
+                voteAverage:movieData.vote_average,
+                title:movieData.title
             } 
             let {data} = await axiosInstance.put("tmdb/movie/watchlist",payload,{headers:{Authorization:`Bearer ${token}`}})
 
