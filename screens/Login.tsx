@@ -35,7 +35,7 @@ export default function Login(Props: { navigation: any; }):ReactNode{
                 // let temp = useSelector(state=>state.login.isLoggedIn)
                 // console.log("here"+temp)
                 let res = await axiosInstance.post("auth/authenticate",payload);
-                // console.log(res);                
+                              
                 dispatch(saveToken({token:res.data.token,email:email,isLoggedIn:true}))
                 
             }catch(e:any){
